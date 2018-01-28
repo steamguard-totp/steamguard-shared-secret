@@ -58,6 +58,6 @@ printf '
 Extracting data. Please confirm "back up my data" on device. DO NOT set a password.
 '
 adb backup -f backup.ab com.valvesoftware.android.steam.community
-dd if=backup.ab bs=24 skip=1 | python2 -c "import zlib,sys;sys.stdout.write(zlib.decompress(sys.stdin.read()))" | tar -xvf -
+dd if=backup.ab bs=24 skip=1 | python2 -c "import zlib,sys;sys.stdout.write(zlib.decompress(sys.stdin.read()))" | tar -xf -
 
 cat apps/com.valvesoftware.android.steam.community/f/*
