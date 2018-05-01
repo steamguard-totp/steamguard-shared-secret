@@ -15,9 +15,13 @@ are not experienced with the command line and debugging on your own.
 ### Requirements
 * JDK
 * [Apktool](https://ibotpeaches.github.io/Apktool/)
-* Linux (maybe Mac but I have not and will not test it)
 * ADB
 * Python 2
+
+### Supported Environments
+* Linux
+* Windows + Git Bash ([#3](https://github.com/steamguard-totp/steamguard-shared-secret/issues/3))
+* Maybe Mac (untested)
 
 # How it does it
 If you phone is rooted, don't use this. Do this instead:
