@@ -9,7 +9,7 @@ Use this on your main account at your own risk!
 This is for you if you have an unrooted Android phone and would like to authenticate on both your phone and your PC.
 
 ### Who this is not for:
-This is not for you if you have a Windows PC, an iPhone, or a rooted Android phone. This may not be for you (yet) if you
+This is not for you if you have an iPhone or a rooted Android phone. This may not be for you (yet) if you
 are not experienced with the command line and debugging on your own.
 
 ### Requirements
