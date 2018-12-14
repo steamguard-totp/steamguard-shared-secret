@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Abort on errors.
+set -e
+
 printf 'Make sure Steam Guard Mobile Authenticator is DISABLED or you will be
 locked out of your Steam account!
 '
