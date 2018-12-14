@@ -15,7 +15,12 @@ locked out of your Steam account!
 read -rp 'Press [ENTER] when you are ready, or Ctrl-C to exit.'
 
 printf '[ Pulling APK from device ]\n'
-adb pull /data/app/com.valvesoftware.android.steam.community-1/base.apk steam.apk
+adb shell pm list packages \
+    | grep -m1 steam.community \
+    | cut -d: -f2 \
+    | xargs -r -n1 -I@ adb shell pm path @ \
+    | cut -d: -f2 \
+    | xargs -r -n1 -I@ adb pull @ steam.apk
 
 printf '\n[ Disassembling APK ]\n'
 apktool d steam.apk
