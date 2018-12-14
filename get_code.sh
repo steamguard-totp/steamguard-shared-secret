@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+command -v "python2"
+if [[ $? -ne 0 ]]; then
+    printf 'Missing python2. Installed under a different name?\n'
+    exit 1
+fi
+
 # Abort on errors.
 set -e
 
