@@ -34,7 +34,7 @@ apktool b steam
 
 printf '\n[ Generating signing key ]\n'
 STOREPASS=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
-KEYPASS=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
+KEYPASS="$STOREPASS"
 keytool -genkey -noprompt \
     -keyalg RSA \
     -keysize 2048 \
