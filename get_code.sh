@@ -33,16 +33,14 @@ printf '\n[ Rebuilding APK ]\n'
 apktool b steam
 
 printf '\n[ Generating signing key ]\n'
-STOREPASS=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
-KEYPASS="$STOREPASS"
 keytool -genkey -noprompt \
     -keyalg RSA \
     -keysize 2048 \
     -validity 10000 \
-    -storepass "$STOREPASS" \
-    -keypass "$KEYPASS" \
+    -storepass "123456" \
+    -keypass "123456" \
     -keystore key.keystore \
-    -alias alias \
+    -alias attemptone \
     -dname "CN=example.com, OU=dont, O=use, L=this, S=in, C=production"
 
 printf '\n[ Signing APK ]\n'
@@ -50,10 +48,10 @@ jarsigner \
     -sigalg SHA1withRSA \
     -digestalg SHA1 \
     -keystore key.keystore \
-    -storepass "$STOREPASS" \
-    -keypass "$KEYPASS" \
+    -storepass "123456" \
+    -keypass "123456" \
     steam/dist/steam.apk \
-    alias
+    attemptone
 rm key.keystore
 
 printf '\n[ Uninstalling Steam App ]\n'
