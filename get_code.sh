@@ -6,6 +6,14 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
+# Check for gsed for MacOS
+if [ -x "$(command -v gsed)" ]; then
+    printf 'Using gsed\n'
+    SEDVAR = "gsed"
+else
+    SEDVAR = "sed"
+fi
+
 # Abort on errors.
 set -e
 
@@ -27,7 +35,7 @@ apktool d steam.apk
 rm steam.apk
 
 printf '\n[ Patching AndroidManifest.xml ]\n'
-sed -i 's/android:allowBackup="false"/android:allowBackup="true"/g' steam/AndroidManifest.xml
+$SEDVAR -i 's/android:allowBackup="false"/android:allowBackup="true"/g' steam/AndroidManifest.xml
 
 printf '\n[ Rebuilding APK ]\n'
 apktool b steam
