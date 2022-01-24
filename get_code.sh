@@ -6,6 +6,14 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
+# Check for gsed for MacOS
+if [ -x "$(command -v gsed)" ]; then
+    printf 'Using gsed\n'
+    SEDVAR = "gsed"
+else
+    SEDVAR = "sed"
+fi
+
 # Abort on errors.
 set -e
 
@@ -27,22 +35,22 @@ apktool d steam.apk
 rm steam.apk
 
 printf '\n[ Patching AndroidManifest.xml ]\n'
-sed -i 's/android:allowBackup="false"/android:allowBackup="true"/g' steam/AndroidManifest.xml
+$SEDVAR -i 's/android:allowBackup="false"/android:allowBackup="true"/g' steam/AndroidManifest.xml
 
 printf '\n[ Rebuilding APK ]\n'
 apktool b steam
 
+PASS=$(tr -cd "[:digit:]" < /dev/urandom | head -c 8)
+
 printf '\n[ Generating signing key ]\n'
-STOREPASS=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
-KEYPASS="$STOREPASS"
 keytool -genkey -noprompt \
     -keyalg RSA \
     -keysize 2048 \
     -validity 10000 \
-    -storepass "$STOREPASS" \
-    -keypass "$KEYPASS" \
+    -storepass $PASS \
+    -keypass $PASS \
     -keystore key.keystore \
-    -alias alias \
+    -alias attemptone \
     -dname "CN=example.com, OU=dont, O=use, L=this, S=in, C=production"
 
 printf '\n[ Signing APK ]\n'
@@ -50,10 +58,10 @@ jarsigner \
     -sigalg SHA1withRSA \
     -digestalg SHA1 \
     -keystore key.keystore \
-    -storepass "$STOREPASS" \
-    -keypass "$KEYPASS" \
+    -storepass $PASS \
+    -keypass $PASS \
     steam/dist/steam.apk \
-    alias
+    attemptone
 rm key.keystore
 
 printf '\n[ Uninstalling Steam App ]\n'
