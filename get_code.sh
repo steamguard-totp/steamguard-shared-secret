@@ -40,13 +40,15 @@ $SEDVAR -i 's/android:allowBackup="false"/android:allowBackup="true"/g' steam/An
 printf '\n[ Rebuilding APK ]\n'
 apktool b steam
 
+PASS=$(tr -cd "[:digit:]" < /dev/urandom | head -c 8)
+
 printf '\n[ Generating signing key ]\n'
 keytool -genkey -noprompt \
     -keyalg RSA \
     -keysize 2048 \
     -validity 10000 \
-    -storepass "123456" \
-    -keypass "123456" \
+    -storepass $PASS \
+    -keypass $PASS \
     -keystore key.keystore \
     -alias attemptone \
     -dname "CN=example.com, OU=dont, O=use, L=this, S=in, C=production"
@@ -56,8 +58,8 @@ jarsigner \
     -sigalg SHA1withRSA \
     -digestalg SHA1 \
     -keystore key.keystore \
-    -storepass "123456" \
-    -keypass "123456" \
+    -storepass $PASS \
+    -keypass $PASS \
     steam/dist/steam.apk \
     attemptone
 rm key.keystore
