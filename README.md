@@ -16,12 +16,12 @@ are not experienced with the command line and debugging on your own.
 * JDK
 * [Apktool](https://ibotpeaches.github.io/Apktool/)
 * ADB
-* Python 2
+* Python 3
 
 ### Supported Environments
 * Linux
 * Windows + Git Bash ([#3](https://github.com/steamguard-totp/steamguard-shared-secret/issues/3))
-* Mac (`brew install apktool; brew cask install android-platform-tools; brew install gnu-sed`)
+* Mac (`brew install apktool; brew cask install android-platform-tools; brew install gnu-sed; brew install python`)
 
 # How it does it
 If you phone is rooted, don't use this. Do this instead:
