@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-command -v "python2"
+command -v "python3"
 if [[ $? -ne 0 ]]; then
-    printf 'Missing python2. Installed under a different name?\n'
+    printf 'Missing python3. Installed under a different name?\n'
     exit 1
 fi
 
@@ -80,6 +80,6 @@ printf '
 Extracting data. Please confirm "back up my data" on device. DO NOT set a password.
 '
 adb backup -f backup.ab com.valvesoftware.android.steam.community
-dd if=backup.ab bs=24 skip=1 | python2 -c "import zlib,sys;sys.stdout.write(zlib.decompress(sys.stdin.read()))" | tar -xf -
+dd if=backup.ab bs=24 skip=1 | python3 -c "import zlib,sys;sys.stdout.buffer.write(zlib.decompress(sys.stdin.buffer.read()))" | tar -xf -
 
-cat apps/com.valvesoftware.android.steam.community/f/* | python2 -m json.tool
+cat apps/com.valvesoftware.android.steam.community/f/* | python3 -m json.tool
