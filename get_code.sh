@@ -9,9 +9,9 @@ fi
 # Check for gsed for MacOS
 if [ -x "$(command -v gsed)" ]; then
     printf 'Using gsed\n'
-    SEDVAR = "gsed"
+    SEDVAR="gsed"
 else
-    SEDVAR = "sed"
+    SEDVAR="sed"
 fi
 
 # Abort on errors.
