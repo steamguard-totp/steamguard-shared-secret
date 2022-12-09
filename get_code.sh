@@ -54,22 +54,23 @@ keytool -genkey -noprompt \
     -alias attemptone \
     -dname "CN=example.com, OU=dont, O=use, L=this, S=in, C=production"
 
+printf '\n[ Preparing the file ]\n'
+zipalign -v -f 4 steam/dist/steam.apk steam/dist/steam-aligned.apk
+
 printf '\n[ Signing APK ]\n'
-jarsigner \
-    -sigalg SHA1withRSA \
-    -digestalg SHA1 \
-    -keystore key.keystore \
-    -storepass $PASS \
-    -keypass $PASS \
-    steam/dist/steam.apk \
-    attemptone
+apksigner sign \
+	--ks key.keystore \
+	--ks-key-alias attemptone \
+	--ks-pass pass:$PASS \
+	--key-pass pass:$PASS \
+	steam/dist/steam-aligned.apk
 rm key.keystore
 
 printf '\n[ Uninstalling Steam App ]\n'
 adb uninstall com.valvesoftware.android.steam.community
 
 printf '\n[ Installing patched APK ]\n'
-adb install steam/dist/steam.apk
+adb install steam/dist/steam-aligned.apk
 adb shell monkey -p com.valvesoftware.android.steam.community 1
 
 printf '
