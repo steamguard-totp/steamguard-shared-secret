@@ -40,7 +40,8 @@ $SEDVAR -i 's/android:allowBackup="false"/android:allowBackup="true"/g' steam/An
 printf '\n[ Rebuilding APK ]\n'
 apktool b steam
 
-PASS=$(tr -cd "[:digit:]" < /dev/urandom | head -c 8)
+printf '\n[ Generating password ]\n'
+PASS=$(LC_CTYPE=C LC_ALL=C tr -cd "[:digit:]" < /dev/urandom | head -c 8)
 
 printf '\n[ Generating signing key ]\n'
 keytool -genkey -noprompt \
