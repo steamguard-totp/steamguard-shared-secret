@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+USE_LEGACY_SIGN=false
+
 command -v "python3"
 if [[ $? -ne 0 ]]; then
     printf 'Missing python3. Installed under a different name?\n'
@@ -16,6 +18,19 @@ fi
 
 # Abort on errors.
 set -e
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --legacy-sign)
+      USE_LEGACY_SIGN=true
+      shift
+      ;;
+    *)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+  esac
+done
 
 printf 'Make sure Steam Guard Mobile Authenticator is DISABLED or you will be
 locked out of your Steam account!
@@ -40,7 +55,8 @@ $SEDVAR -i 's/android:allowBackup="false"/android:allowBackup="true"/g' steam/An
 printf '\n[ Rebuilding APK ]\n'
 apktool b steam
 
-PASS=$(tr -cd "[:digit:]" < /dev/urandom | head -c 8)
+printf '\n[ Generating password ]\n'
+PASS=$(LC_CTYPE=C LC_ALL=C tr -cd "[:digit:]" < /dev/urandom | head -c 8)
 
 printf '\n[ Generating signing key ]\n'
 keytool -genkey -noprompt \
@@ -53,8 +69,9 @@ keytool -genkey -noprompt \
     -alias attemptone \
     -dname "CN=example.com, OU=dont, O=use, L=this, S=in, C=production"
 
-printf '\n[ Signing APK ]\n'
-jarsigner \
+if [ "$USE_LEGACY_SIGN" = true ]; then
+  printf '\n[ Signing APK (legacy way) ]\n'
+  jarsigner \
     -sigalg SHA1withRSA \
     -digestalg SHA1 \
     -keystore key.keystore \
@@ -62,6 +79,19 @@ jarsigner \
     -keypass $PASS \
     steam/dist/steam.apk \
     attemptone
+else
+  printf '\n[ Preparing the file ]\n'
+  zipalign -v -f 4 steam/dist/steam.apk steam/dist/steam-aligned.apk
+  mv -f steam/dist/steam-aligned.apk steam/dist/steam.apk
+
+  printf '\n[ Signing APK ]\n'
+  apksigner sign \
+    --ks key.keystore \
+    --ks-key-alias attemptone \
+    --ks-pass pass:$PASS \
+    --key-pass pass:$PASS \
+    steam/dist/steam.apk
+fi
 rm key.keystore
 
 printf '\n[ Uninstalling Steam App ]\n'
