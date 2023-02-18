@@ -19,9 +19,41 @@ are not experienced with the command line and debugging on your own.
 * Python 3
 * Android SDK
 
-Android SDK is required, if you are going to use Android 12+. 
-If you have an older Android version, and you want to skip installing SDK, 
-you can use a legacy mode with `--legacy-sign` command line switch (e.g. `./get_code.sh --legacy-sign`)
+Android SDK is required, if you are going to use Android 12+. If you have an
+older Android version, and you want to skip installing SDK, you can use
+a legacy mode with `--legacy-sign` command line switch (e.g. `./get_code.sh
+--legacy-sign`)
+
+Installing Android SDK can be a tad involved but below are some hints for
+a minimal, CLI-only, temporary install:
+
+1. Visit the [Android Studio
+   site](https://developer.android.com/studio#command-tools) and scroll down to
+   "Command line tools only".
+2. Download and unpack the `.zip` for your platform.
+3. Install `zipalign` and `apksigner`:
+   ```sh
+   /path/to/your/commandlinetools/cmdline-tools/bin/sdkmanager \
+       --sdk_root=/path/to/your/commandlinetools \
+       --install 'cmdline-tools;latest'
+   ```
+4. Now the two needed CLI tools will be available in some versioned
+   subdirectory of that directory.
+
+   You can _temporarily_ add it to your `PATH` if you've just installed it for
+   this one-time task. If you have `realpath` and `dirname` installed from the
+   GNU suite of tools this can be automated, otherwise you'll need to find the
+   correct path manually. E.g.:
+   ```sh
+   export PATH="${PATH}$(find /path/to/your/commandlinetools -name zipalign \
+       | xargs realpath | xargs dirname | xargs printf ':%s')"
+   ```
+
+   Double-check that worked with `which zipalign` and `which apksigner`.
+5. For as long as that temporary `PATH` variable exists (and is correct) the
+   `get_code.sh` script should be able to find them when you run it. You can
+   delete the commandlinetools directory once you're done and exiting your
+   shell will forget the temporary `PATH` addition.
 
 ### Supported Environments
 * Linux
